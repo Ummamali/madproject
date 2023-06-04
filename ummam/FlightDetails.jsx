@@ -22,13 +22,16 @@ import flightsData from './flightsData';
 import {useNavigation} from '@react-navigation/native';
 import TripsButton from './TripsButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {bookFlight} from './utilFuncs';
+import {BookFlight} from './store/MyBookingsSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 const screenPadding = 20;
 
 export default function FlightDetails({route}) {
   const flightObj = flightsData[route.params.flightId];
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const myBookings = useSelector(state => state.myBookings.myBookings);
   return (
     <View style={styles.screen}>
       <TouchableOpacity
@@ -66,9 +69,12 @@ export default function FlightDetails({route}) {
             {'Seats Available: ' + flightObj.seatsAvailable}
           </Text>
           <StyledButton
-            title="Book Flight"
+            disabled={route.params.flightId in myBookings}
+            title={
+              route.params.flightId in myBookings ? 'Booked' : 'Book Flight'
+            }
             onPress={() => {
-              bookFlight(route.params.flightId, 5);
+              dispatch(BookFlight({flightId: route.params.flightId, seats: 1}));
             }}
             additionalStyle={{
               borderRadius: 1,
@@ -76,7 +82,8 @@ export default function FlightDetails({route}) {
               paddingRight: 44,
               paddingTop: 8,
               paddingBottom: 8,
-              backgroundColor: '#05948F',
+              backgroundColor:
+                route.params.flightId in myBookings ? '#000' : '#05948F',
             }}
           />
         </View>
@@ -141,6 +148,7 @@ function Card({
   buttonTitle,
   onButtonClick,
 }) {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -185,7 +193,7 @@ function Card({
         <StyledButton
           title={buttonTitle}
           titleFontSize={13}
-          onPress={onButtonClick}
+          onPress={() => navigation.navigate('HotelsList')}
           additionalStyle={{
             borderRadius: 1,
             paddingLeft: 40,
@@ -209,8 +217,10 @@ function Card({
 const cardLength = 120;
 
 function ExploreCard({city = 'london'}) {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
+      onPress={() => navigation.navigate('Result')}
       style={{
         position: 'relative',
         borderRadius: 3,

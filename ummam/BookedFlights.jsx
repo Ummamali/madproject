@@ -24,8 +24,9 @@ import citiesData from './citiesData';
 
 import Color from 'color';
 import {useNavigation} from '@react-navigation/native';
-import {cancelBooking, replaceBookingsStorage} from './utilFuncs';
 import NoFlightsPrompt from './NoFlightsPrompt';
+import {useSelector, useDispatch} from 'react-redux';
+import {CancelFlight, FirstLoad} from './store/MyBookingsSlice';
 
 // Configs here
 const cardHeight = 170;
@@ -35,36 +36,12 @@ const paddingX = 24;
 const cardOuterPadding = 8;
 
 export default function BookedFlights() {
-  const [myBookings, setMyBookings] = useState({});
+  const myBookings = useSelector(state => state.myBookings.myBookings);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    async function getMyBookedFlights() {
-      try {
-        const myStorageBookingsString = await AsyncStorage.getItem(
-          'myBookings',
-        );
-
-        if (myStorageBookingsString === null) {
-          AsyncStorage.setItem('myBookings', JSON.stringify({}));
-        } else {
-          setMyBookings(JSON.parse(myStorageBookingsString));
-        }
-      } catch (error) {
-        console.log('some error occured', error);
-      }
-    }
-    getMyBookedFlights();
+    dispatch(FirstLoad());
   }, []);
-
-  useEffect(() => {
-    replaceBookingsStorage(myBookings);
-  }, [myBookings]);
-
-  function cancelFlight(flightId) {
-    const newBookings = {...myBookings};
-    delete newBookings[flightId];
-    setMyBookings(newBookings);
-  }
 
   return (
     <View style={styles.screen}>
@@ -92,12 +69,7 @@ export default function BookedFlights() {
       <ScrollView>
         {Object.keys(myBookings).length > 0 ? (
           Object.keys(myBookings).map(flightId => (
-            <Card
-              flightId={flightId}
-              key={flightId}
-              myBookings={myBookings}
-              cancelFlight={cancelFlight}
-            />
+            <Card flightId={flightId} key={flightId} myBookings={myBookings} />
           ))
         ) : (
           <NoFlightsPrompt />
@@ -107,7 +79,7 @@ export default function BookedFlights() {
   );
 }
 
-function Card({flightId, myBookings, cancelFlight}) {
+function Card({flightId, myBookings}) {
   const {tocity} = flightsData[flightId];
   return (
     <View
@@ -134,21 +106,18 @@ function Card({flightId, myBookings, cancelFlight}) {
           opacity: 0.7,
         }}
       />
-      <CardTextData
-        flightId={flightId}
-        myBookings={myBookings}
-        cancelFlight={cancelFlight}
-      />
+      <CardTextData flightId={flightId} myBookings={myBookings} />
     </View>
   );
 }
 
-function CardTextData({flightId, myBookings, cancelFlight}) {
+function CardTextData({flightId, myBookings}) {
   const {date, time, notifications, airline, code, weightLimit, tocity} =
     flightsData[flightId];
   const myBookedSeats = myBookings[flightId];
   const navigation = useNavigation();
   const [cancelClicks, setCancelClicks] = useState(0);
+  const dispatch = useDispatch();
   return (
     <View
       style={{
@@ -222,7 +191,7 @@ function CardTextData({flightId, myBookings, cancelFlight}) {
             if (cancelClicks === 0) {
               setCancelClicks(prev => prev + 1);
             } else {
-              cancelFlight(flightId);
+              dispatch(CancelFlight(flightId));
             }
           }}>
           <Text style={{fontSize: 17, color: '#EE4B2B', opacity: 0.85}}>

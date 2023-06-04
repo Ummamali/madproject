@@ -1,1 +1,1 @@
-module.exports = ['abc1', 'abc2', 'abc3', 'abc4', 'abc5'];
+module.exports = ['flight1', 'flight2', 'flight3', 'flight4', 'flight5'];

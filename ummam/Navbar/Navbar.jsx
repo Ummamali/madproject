@@ -6,17 +6,22 @@ const tabsData = [
   {
     name: 'Rooms',
     image: require('./icons/rooms.png'),
-    routeName: 'Route name not set',
+    routeName: 'HotelsList',
   },
   {
-    name: 'Bookings',
+    name: 'Flights',
     image: require('./icons/flight.png'),
     routeName: 'FlightSearch',
   },
   {
+    name: 'Explore',
+    image: require('./icons/exploreIcon.png'),
+    routeName: 'SearchScreen',
+  },
+  {
     name: 'Itinerary',
     image: require('./icons/checklist.png'),
-    routeName: 'Route name not set',
+    routeName: 'ItineraryDashboard',
   },
   {
     name: 'Profile',
@@ -41,7 +46,7 @@ export default function Navbar() {
           key={t.name}>
           <Image
             source={t.image}
-            style={{width: 26, height: 26, opacity: 0.7}}
+            style={{width: 24, height: 24, opacity: 0.7}}
           />
           <Text style={styles.smallText}>{t.name}</Text>
         </TouchableOpacity>

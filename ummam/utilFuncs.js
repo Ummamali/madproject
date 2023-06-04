@@ -55,46 +55,10 @@ export function debounce(action, timeoutObject, bounceInterval = 250) {
   }
 }
 
-export async function bookFlight(flightId, seats) {
-  try {
-    const myStorageBookingsString = await AsyncStorage.getItem('myBookings');
-    const myStorageBookings =
-      myStorageBookingsString !== null
-        ? JSON.parse(myStorageBookingsString)
-        : {};
-
-    myStorageBookings[flightId] = seats;
-
-    await AsyncStorage.setItem('myBookings', JSON.stringify(myStorageBookings));
-    return true;
-  } catch (error) {
-    console.log('some error occured', error);
-    return false;
-  }
-}
-
 export async function replaceBookingsStorage(newBookingObject) {
   try {
     AsyncStorage.setItem('myBookings', JSON.stringify(newBookingObject));
   } catch (e) {
     console.log('Error occured...', e);
-  }
-}
-
-export async function cancelBooking(flightId) {
-  try {
-    const myStorageBookingsString = await AsyncStorage.getItem('myBookings');
-    const myStorageBookings =
-      myStorageBookingsString !== null
-        ? JSON.parse(myStorageBookingsString)
-        : {};
-
-    delete myStorageBookings[flightId];
-
-    await AsyncStorage.setItem('myBookings', JSON.stringify(myStorageBookings));
-    return true;
-  } catch (error) {
-    console.log('some error occured', error);
-    return false;
   }
 }
