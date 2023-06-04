@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,9 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   titleTextStyle,
   subtitleTextStyle,
@@ -18,11 +20,12 @@ import {
 } from './globalConfig';
 import StyledButton from './StyledButton';
 import flightsData from './flightsData';
-import myBookings from './myBookings';
 import citiesData from './citiesData';
 
 import Color from 'color';
 import {useNavigation} from '@react-navigation/native';
+import {cancelBooking, replaceBookingsStorage} from './utilFuncs';
+import NoFlightsPrompt from './NoFlightsPrompt';
 
 // Configs here
 const cardHeight = 170;
@@ -32,6 +35,37 @@ const paddingX = 24;
 const cardOuterPadding = 8;
 
 export default function BookedFlights() {
+  const [myBookings, setMyBookings] = useState({});
+
+  useEffect(() => {
+    async function getMyBookedFlights() {
+      try {
+        const myStorageBookingsString = await AsyncStorage.getItem(
+          'myBookings',
+        );
+
+        if (myStorageBookingsString === null) {
+          AsyncStorage.setItem('myBookings', JSON.stringify({}));
+        } else {
+          setMyBookings(JSON.parse(myStorageBookingsString));
+        }
+      } catch (error) {
+        console.log('some error occured', error);
+      }
+    }
+    getMyBookedFlights();
+  }, []);
+
+  useEffect(() => {
+    replaceBookingsStorage(myBookings);
+  }, [myBookings]);
+
+  function cancelFlight(flightId) {
+    const newBookings = {...myBookings};
+    delete newBookings[flightId];
+    setMyBookings(newBookings);
+  }
+
   return (
     <View style={styles.screen}>
       <View style={{paddingHorizontal: 10}}>
@@ -56,15 +90,24 @@ export default function BookedFlights() {
         </View>
       </View>
       <ScrollView>
-        {Object.keys(myBookings).map(flightId => (
-          <Card flightId={flightId} key={flightId}/>
-        ))}
+        {Object.keys(myBookings).length > 0 ? (
+          Object.keys(myBookings).map(flightId => (
+            <Card
+              flightId={flightId}
+              key={flightId}
+              myBookings={myBookings}
+              cancelFlight={cancelFlight}
+            />
+          ))
+        ) : (
+          <NoFlightsPrompt />
+        )}
       </ScrollView>
     </View>
   );
 }
 
-function Card({flightId}) {
+function Card({flightId, myBookings, cancelFlight}) {
   const {tocity} = flightsData[flightId];
   return (
     <View
@@ -91,16 +134,21 @@ function Card({flightId}) {
           opacity: 0.7,
         }}
       />
-      <CardTextData flightId={flightId} />
+      <CardTextData
+        flightId={flightId}
+        myBookings={myBookings}
+        cancelFlight={cancelFlight}
+      />
     </View>
   );
 }
 
-function CardTextData({flightId}) {
+function CardTextData({flightId, myBookings, cancelFlight}) {
   const {date, time, notifications, airline, code, weightLimit, tocity} =
     flightsData[flightId];
   const myBookedSeats = myBookings[flightId];
   const navigation = useNavigation();
+  const [cancelClicks, setCancelClicks] = useState(0);
   return (
     <View
       style={{
@@ -141,7 +189,10 @@ function CardTextData({flightId}) {
               ...styles.normalText,
               marginTop: 10,
               opacity: notifications.length > 0 ? 1 : 0.5,
-              color: (notifications.length > 0 ? Color(citiesData[tocity].darkBackground).lighten(2.2).hex() : '#fff'),
+              color:
+                notifications.length > 0
+                  ? Color(citiesData[tocity].darkBackground).lighten(2.2).hex()
+                  : '#fff',
             }}>
             {notifications.length > 0
               ? notifications[0]
@@ -166,16 +217,23 @@ function CardTextData({flightId}) {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (cancelClicks === 0) {
+              setCancelClicks(prev => prev + 1);
+            } else {
+              cancelFlight(flightId);
+            }
+          }}>
           <Text style={{fontSize: 17, color: '#EE4B2B', opacity: 0.85}}>
-            Cancel
+            {cancelClicks === 0 ? 'Cancel' : 'Press again to cancel'}
           </Text>
         </TouchableOpacity>
         <StyledButton
           title={'Details'}
           titleFontSize={14}
           onPress={() => navigation.navigate('FlightDetails', {flightId})}
-          titleColor='#333'
+          titleColor="#333"
           additionalStyle={{
             backgroundColor: '#34BFA6',
             paddingHorizontal: 30,

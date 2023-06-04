@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -19,20 +19,26 @@ import TripsButton from './TripsButton';
 import Fuse from 'fuse.js';
 import flightsData from './flightsData';
 import FlightResult from './FlightResult';
-import {searchFlights} from './utilFuncs';
+import {SearchFlightsCities, debounce, searchFlights} from './utilFuncs';
 import NoFlightsPrompt from './NoFlightsPrompt';
 
 export default function SearchResult({route, navigation}) {
   const {params} = route;
   const [tocity, setTocity] = useState(params.tocity ? params.tocity : '');
   const [flights, setFlights] = useState([]);
+  const timeoutRef = useRef({timeout: null});
 
   useEffect(() => {
-    const result = searchFlights([
-      {name: 'fromcity', value: params.fromcity},
-      {name: 'tocity', value: tocity},
-    ]);
-    setFlights(result);
+    debounce(
+      () =>
+        setFlights(
+          SearchFlightsCities([
+            {name: 'fromcity', value: params.fromcity},
+            {name: 'tocity', value: tocity},
+          ]),
+        ),
+      timeoutRef.current,
+    );
   }, [tocity]);
 
   return (
@@ -69,7 +75,7 @@ export default function SearchResult({route, navigation}) {
         }}>
         <Image
           source={require('./images/globeIcon.png')}
-          style={{width: 26, height: 26, opacity: 0.8, marginBottom: -8}}
+          style={{width: 26, height: 26, opacity: 0.6, marginBottom: -8}}
         />
         <TextInput
           style={styles.textInputStyles}

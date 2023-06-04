@@ -21,6 +21,8 @@ import Color from 'color';
 import flightsData from './flightsData';
 import {useNavigation} from '@react-navigation/native';
 import TripsButton from './TripsButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {bookFlight} from './utilFuncs';
 
 const screenPadding = 20;
 
@@ -65,6 +67,9 @@ export default function FlightDetails({route}) {
           </Text>
           <StyledButton
             title="Book Flight"
+            onPress={() => {
+              bookFlight(route.params.flightId, 5);
+            }}
             additionalStyle={{
               borderRadius: 1,
               paddingLeft: 44,
@@ -265,7 +270,7 @@ const styles = StyleSheet.create({
     ...subtitleTextStyle,
     marginLeft: screenPadding,
     fontSize: 15,
-    opacity: 0.8
+    opacity: 0.8,
   },
   ftr: {
     fontFamily: 'Roboto-Regular',
