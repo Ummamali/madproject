@@ -26,12 +26,7 @@ const tabsData = [
   {
     name: 'Profile',
     image: require('./icons/user.png'),
-    routeName: 'Route name not set',
-  },
-  {
-    name: 'Settings',
-    image: require('./icons/settings.png'),
-    routeName: 'Route name not set',
+    routeName: 'Login',
   },
 ];
 

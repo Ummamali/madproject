@@ -31,6 +31,14 @@ import AddActivity from './muneeb/screens/AddActivity';
 import ItineraryCreated from './muneeb/screens/ItineraryCreated';
 import ViewItinerary from './muneeb/screens/ViewItinerary';
 
+import LoginScreen from './naeem/LoadingScreen';
+import RegistrationScreen from './naeem/RegistrationScreen';
+import ForgotScreen from './naeem/ForgotScreen';
+import VerificationScreen from './naeem/VerificationScreen';
+import ChangePasswordScreen from './naeem/ChangePasswordScreen';
+import ProfileScreen from './naeem/ProfileScreen';
+import LoadingScreen from './naeem/LoadingScreen';
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -41,7 +49,7 @@ function App() {
         <StatusBar backgroundColor="#fff" barStyle={'dark-content'} />
 
         <Stack.Navigator
-          initialRouteName="SearchScreen"
+          initialRouteName="Loading"
           screenOptions={{headerShown: false}}>
           {/* Shazaib's screens Below */}
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
@@ -86,6 +94,42 @@ function App() {
               <ItineraryCreated {...props} setItineraries={setItineraries} />
             )}
           </Stack.Screen>
+          {/* Naeem's screens Below */}
+          <Stack.Screen
+            name="Loading"
+            component={LoadingScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Registration"
+            component={RegistrationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Forgot"
+            component={ForgotScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Verification"
+            component={VerificationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
         <Navbar />
       </NavigationContainer>
