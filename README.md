@@ -41,6 +41,40 @@ TripMate aims to simplify travel planning, making it accessible and enjoyable fo
 
 > Due to privacy concerns, this repository contains the code for the **Flight Management** module of the TripMate app.
 
+## How to Run This Project
+
+To get started with this project, follow these steps:
+
+### Prerequisites
+
+- Node.js (version 16 or higher)
+- npm (or yarn)
+- React Native CLI (installed globally)
+- Android Studio or Xcode for running the app on an emulator or physical device
+
 ## License
 
 This project is licensed under the MIT License. For more details, you can view the full license [here](https://opensource.org/licenses/MIT).
+
+### Steps to Run
+
+1. Clone the repository to your local machine:
+
+   ```bash
+   git clone https://github.com/ummamali/madproject.git
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd madproject
+
+3. Install the dependencies:
+    ```bash
+    npm install
+  
+## License
+
+This project is licensed under the MIT License. For more details, you can view the full license [here](https://opensource.org/licenses/MIT).
+
+
+
