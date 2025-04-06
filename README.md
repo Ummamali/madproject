@@ -39,7 +39,7 @@ TripMate aims to simplify travel planning, making it accessible and enjoyable fo
   Stripe is integrated to handle secure payment processing within the app. It provides a reliable and easy-to-use solution for handling financial transactions, from room bookings to ticket purchases.
 
 
-> Due to privacy concerns, this repository contains the code for the **Flight Management** module of the TripMate app.
+> Due to privacy concerns, this repository contains the modified code for the **Flight Management** & **Itinerary Management** module of the TripMate app.
 
 ## How to Run This Project
 
