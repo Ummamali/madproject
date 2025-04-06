@@ -1,2 +1,5 @@
-# Final Semester Project
-Flight Module contains 5 screens
+# TripMate: The Ultimate Trip Management Tool (MAD Project)
+
+TripMate is a comprehensive mobile application developed using React Native in 2023 to streamline and enhance the travel experience. The app offers a range of features, including user authentication, room booking, payment processing, and the ability to purchase tickets for famous tourist spots in any city. With TripMate, users can create personalized itineraries, search for flights, and manage their travel plans effortlessly. The project began with a detailed interface design created in Figma, ensuring a user-friendly and professional layout before moving on to the development phase. After receiving approval for the design, the app was developed to bring the vision to life, making it a powerful and convenient tool for travelers.
+
+TripMate aims to simplify travel planning, making it accessible and enjoyable for everyone. By integrating all essential features in one app, it helps users stay organized and make the most out of their trips.
